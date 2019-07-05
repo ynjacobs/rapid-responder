@@ -27,11 +27,12 @@ PATIENT:
 12) I can sign up to use the app
 I can remain signed in as long as I dont log out
 16) I can add current medical information to my profile
-I can call for help by pressing a button related to my condition or other
+21) I can call for help by pressing a button related to my condition or other(call emergency contact)
 I can see when a responder agrees to my call
 I can see who the responder is
 I can see a live map of where the responder is
 I can cancel call for help if I'd like
+
 
 P.S
 =====
@@ -57,6 +58,7 @@ details:
 =========
 11) 2 pages: front-page and sign-up page {details?} 
 12) sign-page for the patient {details?} 
+21) auto dials 911 and sends text to emergency contact
 
 CSS:
 ====
