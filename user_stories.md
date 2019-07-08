@@ -10,6 +10,7 @@ user stories
 ============
 RESPONDER:
 11) I can sign up 
+17) I can log in/out
 14) I can check off what I can help with, i.e cpr, carry epi pen 
 15)I can select multiple tags about my credentials
 I can get notification if a call is made
@@ -46,6 +47,7 @@ seperate backend as api
 models and views-sends json
 https://twitter.com/hashtag/silentcallprocedure?f=realtime&src=hash
 
+
 Iteration 1:
 Data models
 11 12 13 14 15 16
@@ -65,4 +67,8 @@ CSS:
 body font family:
 normal text:
 header text:
+
+New ideas:
+===========
+email activation
 
