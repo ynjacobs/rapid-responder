@@ -5,6 +5,7 @@ keys
 *) Guest: logged out user
 *) Medical help:
 *) Profile: the res main information page, it contains:  
+*) Status is the responders availability at a given time, can be red-inactive, yellow-unactivated unless urgent, green-active.
 
 user stories
 ============
