@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rapid_responder.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('auth/', auto_login,name= 'auth'),
+    path('home/', home)
 ]
