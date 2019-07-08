@@ -9,6 +9,9 @@ from django.forms import CharField, PasswordInput, Form
 from django.contrib.auth.models import User
 from enum import Enum
 
+
+
+
 class CASE_STATUS(Enum):
     UNASSIGNED = 'unassigned'
     ONGOING = 'ongoing'
@@ -26,6 +29,10 @@ class Condition(models.Model):
 class Qualification(models.Model):
     name = models.CharField(max_length=255)
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name= 'profiles')
+    flag = models.CharField(max_length=1, choices=[('P', 'Patient'),('R', 'Responder')])
+
 class Patient(models.Model):
     name = models.CharField(max_length=255)
     age = models.CharField(max_length=255)
@@ -36,6 +43,9 @@ class Patient(models.Model):
     emer_contact_name = models.CharField(max_length=255)
     emer_contact_number = models.CharField(max_length=255)
     conditions = models.ManyToManyField(Condition,related_name='patients')
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='patient')
+
+
 
 class Schedule(models.Model):
     date = models.DateField(default=date.today)
@@ -47,6 +57,7 @@ class Responder(models.Model):
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=255)
     qualifications = models.ManyToManyField(Qualification,related_name='responders')
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='responder')
 
 class Case(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
