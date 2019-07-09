@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.core.signing import Signer
 from django.http import JsonResponse
+from django.core import serializers
 
 def home(request):
     return JsonResponse({"hello": "world"})
@@ -37,16 +38,12 @@ def auto_login(request):
         details['Authenticated'] = False
 
     response = JsonResponse(details)
-#     # response['Access-Control-Allow-Origin'] = 'http://localhost:3000/'
-#     # # response["Access-Control-Allow-Origin"] = '*'
-#     # # response["Access-Control-Allow-Credentials"] = "true"
-#     # # response["Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT"]
-#     response['Access-Control-Allow-Methods'] = 'DELETE, GET, OPTIONS, PATCH, POST, PUT'
-#     response['Access-Control-Allow-Origin'] = '*'
-
-#     response['Access-Control-Allow-Headers'] = 'access-control-allow-origin, accept, accept-encoding, authorization, content-type, dnt, origin, user-agent, x-csrftoken, x-requested-with'
-#     # response["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin,Access-Control-Allow-Origin, Access-Control-Request-Headers"
-#     # response["Access-Control-Allow-Headers"] = "access-control-allow-origin"
     return response
+
+def get_qual(request):
+    quals = Qualification.objects.all()
+    data = serializers.serialize("json", quals)
+    print(data)
+    return JsonResponse(data, safe=False)
 
     

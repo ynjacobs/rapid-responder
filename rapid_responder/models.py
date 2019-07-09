@@ -25,9 +25,17 @@ class STATUS(Enum):
 
 class Condition(models.Model):
     name = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name
+
     
 class Qualification(models.Model):
     name = models.CharField(max_length=255)
+    conditions = models.ManyToManyField(Condition, blank=True ,related_name='qualifications')
+   
+    def __str__(self):
+        return self.name
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name= 'profiles')
@@ -46,18 +54,19 @@ class Patient(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='patient')
 
 
-
 class Schedule(models.Model):
     date = models.DateField(default=date.today)
     time_from = models.TimeField()
     time_to = models.TimeField()
     status = models.CharField(max_length=10, default=STATUS.GREEN, choices=[(tag.value, tag.name) for tag in STATUS])
 
+
 class Responder(models.Model):
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=255)
     qualifications = models.ManyToManyField(Qualification,related_name='responders')
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='responder')
+
 
 class Case(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
