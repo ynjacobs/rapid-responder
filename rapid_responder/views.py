@@ -12,31 +12,31 @@ from django.http import JsonResponse
 def home(request):
     return JsonResponse({"hello": "world"})
 
-# def auto_login(request):
+def auto_login(request):
 
-#     details = {}
-#     auth_cookie = request.COOKIES.get('rr_auth')
-#     signer = Signer()
-#     if auth_cookie:
-#         security_token = signer.unsign(auth_cookie)
-#         security_token_arr = security_token.split(' ')
-#         username = security_token_arr[0]
-#         password = security_token_arr[1]
-#         user = authenticate(username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             details['Authenticated'] = True
-#             details['flag'] = 'R'
-#             profile = Profile.objects.get(user=user)
-#             if profile.flag == 'P':
-#                 details['flag'] = 'P'
-#             details['user'] = user
-#         else:
-#             details['Authenticated'] = False
-#     else:
-#         details['Authenticated'] = False
+    details = {}
+    auth_cookie = request.COOKIES.get('rr_auth')
+    signer = Signer()
+    if auth_cookie:
+        security_token = signer.unsign(auth_cookie)
+        security_token_arr = security_token.split(' ')
+        username = security_token_arr[0]
+        password = security_token_arr[1]
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            details['Authenticated'] = True
+            details['flag'] = 'R'
+            profile = Profile.objects.get(user=user)
+            if profile.flag == 'P':
+                details['flag'] = 'P'
+            details['user'] = user
+        else:
+            details['Authenticated'] = False
+    else:
+        details['Authenticated'] = False
 
-#     response = JsonResponse(details)
+    response = JsonResponse(details)
 #     # response['Access-Control-Allow-Origin'] = 'http://localhost:3000/'
 #     # # response["Access-Control-Allow-Origin"] = '*'
 #     # # response["Access-Control-Allow-Credentials"] = "true"
@@ -47,6 +47,6 @@ def home(request):
 #     response['Access-Control-Allow-Headers'] = 'access-control-allow-origin, accept, accept-encoding, authorization, content-type, dnt, origin, user-agent, x-csrftoken, x-requested-with'
 #     # response["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin,Access-Control-Allow-Origin, Access-Control-Request-Headers"
 #     # response["Access-Control-Allow-Headers"] = "access-control-allow-origin"
-#     return response
+    return response
 
     

@@ -19,6 +19,6 @@ from rapid_responder.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('auth/', auto_login,name= 'auth'),
-    path('home/', home)
+    path('auth/', auto_login,name= 'auth'),
+    # path('home/', home)
 ]
