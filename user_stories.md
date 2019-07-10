@@ -51,7 +51,7 @@ https://twitter.com/hashtag/silentcallprocedure?f=realtime&src=hash
 
 Iteration 1:
 Data models ✓
-11 12 17 14 15 16
+11✓ 12 17 14 15 16
 
 Iteration 2:
 Iteration 3:

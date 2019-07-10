@@ -9,14 +9,48 @@ from django.shortcuts import render, get_object_or_404
 from django.core.signing import Signer
 from django.http import JsonResponse
 from django.core import serializers
+import json
 
 def home(request):
     return JsonResponse({"hello": "world"})
 
 def save_res(request):
-    return JsonResponse({"hello": "world"})
+    # uname = request.POST['uname']
 
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
 
+    uname = body['uname']
+    fname = body['fname']
+    lname = body['lname']
+    email = body['email']
+    phone = body['phone']
+    pwd = body['password']
+    quals = body['quals']
+
+    user = User.objects.create_user(uname, email, pwd,first_name=fname, last_name=lname)
+    profile = Profile()
+    profile.user = user
+    profile.flag = 'R'
+    profile.save()
+
+    responder = Responder()
+    responder.profile = profile
+    responder.phone_number = phone
+    responder.name = f'{fname} {lname}'
+    responder.save()
+    for id in quals:
+        qual = Qualification.objects.get(pk=id)
+        responder.qualifications.add(qual)
+    responder.save()
+    login(request, user)
+    signer = Signer()
+    signedText = signer.sign(f'{uname} {pwd}')
+    response = JsonResponse({"hello": "world"})
+    # response.set_cookie('rr_auth', signedText) 
+    response.set_cookie('rr_auth', signedText) 
+
+    return response
 
 def auto_login(request):
 
