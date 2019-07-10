@@ -15,7 +15,7 @@ RESPONDER:
 14) I can check off what I can help with, i.e cpr, carry epi pen 
 15)I can select multiple tags about my credentials
 I can get notification if a call is made
-13) I can set the status of my availability on my schedule each week
+23) I can set the status of my availability on my schedule each week
 I can change my status at any time
 I can choose to respond
 I can see who is asking for help
@@ -51,7 +51,7 @@ https://twitter.com/hashtag/silentcallprocedure?f=realtime&src=hash
 
 Iteration 1:
 Data models ✓
-11 12 13 14 15 16
+11 12 17 14 15 16
 
 Iteration 2:
 Iteration 3:

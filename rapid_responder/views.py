@@ -13,6 +13,11 @@ from django.core import serializers
 def home(request):
     return JsonResponse({"hello": "world"})
 
+def save_res(request):
+    return JsonResponse({"hello": "world"})
+
+
+
 def auto_login(request):
 
     details = {}
