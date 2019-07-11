@@ -19,7 +19,13 @@ from rapid_responder.views import *
 from rapid_responder.modelViews import *
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
-from rest_framework import routers, serializers, viewsets
+from rest_framework.views import APIView
+from rest_framework import routers, serializers, viewsets, views
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -27,25 +33,26 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url', 'username', 'email', 'is_staff')
 
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'patients', PatientViewSet)
 router.register(r'responders', ResponderViewSet)
+# router.register(r'login', LoginViewSet, basename='login/auth/')
 
 urlpatterns = [
+    url(r'^api/token/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    url(r'^api/token/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
     path('auth/', auto_login,name= 'auth'),
     path('qual/', get_qual,name= 'qual'),
     path('cond/', get_cond,name= 'cond'),
     path('saveres/', save_res, name='saveres'),
     path('savepat/', save_pat, name='savepat'),
+    # path('login/', login, name='login'),
     # path('home/', home)
     url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

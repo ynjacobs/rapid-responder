@@ -1,11 +1,11 @@
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers, serializers, viewsets, views
 from rapid_responder.models import Patient, Responder, Profile, Schedule, Case
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id','first_name','last_name','email','password')
+        fields = ('id','username','first_name','last_name','email','password')
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
