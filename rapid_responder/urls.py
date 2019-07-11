@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rapid_responder.views import *
+from rapid_responder.modelViews import *
 from django.conf.urls import url, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
@@ -34,6 +35,8 @@ class UserViewSet(viewsets.ModelViewSet):
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
+router.register(r'patients', PatientViewSet)
+router.register(r'responders', ResponderViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
