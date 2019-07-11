@@ -52,6 +52,55 @@ def save_res(request):
 
     return response
 
+def save_pat(request):
+    # uname = request.POST['uname']
+
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+
+    uname = body['uname']
+    fname = body['fname']
+    lname = body['lname']
+    email = body['email']
+    phone = body['phone']
+    height = body['height']
+    weight = body['weight']
+    medications = body['medications']
+    emer_contact_name = body['emer_contact_name']
+    emer_contact_number = body['emer_contact_number']
+    pwd = body['password']
+    conds = body['conds']
+
+    user = User.objects.create_user(uname, email, pwd,first_name=fname, last_name=lname)
+    profile = Profile()
+    profile.user = user
+    profile.flag = 'P'
+    profile.save()
+
+    patient = Patient()
+    patient.profile = profile
+    patient.phone_number = phone
+    patient.medications = medications
+    patient.height = height
+    patient.weight = weight
+    patient.emer_contact_name = emer_contact_name
+    patient.emer_contact_number = emer_contact_number
+    patient.name = f'{fname} {lname}'
+
+    patient.save()
+    for id in conds:
+        cond = Condition.objects.get(pk=id)
+        patient.conditions.add(cond)
+    patient.save()
+    login(request, user)
+    signer = Signer()
+    signedText = signer.sign(f'{uname} {pwd}')
+    response = JsonResponse({"hello": "world"})
+    # response.set_cookie('rr_auth', signedText) 
+    response.set_cookie('rr_auth', signedText) 
+
+    return response
+    
 def auto_login(request):
 
     details = {}
@@ -82,6 +131,12 @@ def auto_login(request):
 def get_qual(request):
     quals = Qualification.objects.all()
     data = serializers.serialize("json", quals)
+    print(data)
+    return JsonResponse(data, safe=False)
+
+def get_cond(request):
+    conds = Condition.objects.all()
+    data = serializers.serialize("json", conds)
     print(data)
     return JsonResponse(data, safe=False)
 
