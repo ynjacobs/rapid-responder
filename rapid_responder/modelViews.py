@@ -13,6 +13,7 @@ import json
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, action
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # @api_view(['POST'])
 # @action(methods=['POST'], detail=False, url_path='login', url_name='login')
@@ -26,8 +27,9 @@ from rest_framework.decorators import api_view, action
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
-    @action(methods=['POST'], detail=False, url_path='get_by', url_name='get_by')
+    @action(methods=['POST'], detail=False, url_path='get_by', url_name='get_by', permission_classes=[AllowAny])
     def getUserByUsername(self, request):
         print("OOOOOOOO")
         user = get_object_or_404(User, username=request.data['username'])
@@ -80,6 +82,31 @@ class LoginViewSet(viewsets.ModelViewSet):
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(methods=['POST'], detail=False, url_path='get_p', url_name='get_p')
+    def get_patient_byname(self, request):
+        print("get_patient_byname")
+        print("dddd", request.user.id)
+        """
+        user = get_object_or_404(User, username=request.data['username'])
+        print("11111111111", user)
+        
+        profile = get_object_or_404(Profile, user=user)
+        print("22222222", profile)
+
+        serialized_object = None
+        if(profile.flag == 'P'):
+            object = get_object_or_404(Patient, profile=profile)
+            serialized_object = PatientSerializer(object)    
+        else:
+            object = get_object_or_404(Responder, profile=profile)
+            serialized_object = ResponderSerializer(object)    
+
+        print("3333", serialized_object.data)
+        """
+        return Response({'welcome':'just welcome'})
+
 
     def create(self, request):
         body = request.data
