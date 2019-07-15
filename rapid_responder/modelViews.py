@@ -15,6 +15,31 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
+
+
+class ListUsers(APIView):
+    permission_classes = [IsAuthenticated,]
+    serializer_class = UserSerializer
+
+    def get(self, request, format=None):
+            """
+            Return a list of all users.
+            """
+            auth_user = request.user.id
+            profile = Profile.objects.get(user=auth_user)
+            user = None
+            if profile.flag == 'P':
+                user = Patient.objects.get(profile=profile)
+                serialized_user = PatientSerializer(user)
+            else:
+                user = Responder.objects.get(profile=profile)
+                serialized_user = ResponderSerializer(user)
+
+
+            print("user:",user)
+            print("serialized_user:",serialized_user)
+            return Response({"user":serialized_user})
+
 # @api_view(['POST'])
 # @action(methods=['POST'], detail=False, url_path='login', url_name='login')
 # def login(request):
@@ -27,10 +52,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,]
     # permission_classes=[AllowAny]
 
-    @action(methods=['PUT'], detail=False, url_path='get_user/', url_name='get_user/'""", permission_classes=[AllowAny]""")
+    @action(methods=['GET'], detail=False, url_path='get_user/', url_name='get_user/', permission_classes=[AllowAny,])
     def get_user(self, request):
         print('--------------------')
         # user = "I am a user"
@@ -45,25 +70,7 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
                 return Response({user: "I am a user"})
 
-    @action(methods=['POST'], detail=False, url_path='get_by', url_name='get_by' """, permission_classes=[AllowAny]""")
-    def getUserByUsername(self, request):
-        print("OOOOOOOO", request.user)
-        user = get_object_or_404(User, username=request.data['username'])
-        print("11111111111", user)
-        
-        profile = get_object_or_404(Profile, user=user)
-        print("22222222", profile)
 
-        serialized_object = None
-        if(profile.flag == 'P'):
-            object = get_object_or_404(Patient, profile=profile)
-            serialized_object = PatientSerializer(object)    
-        else:
-            object = get_object_or_404(Responder, profile=profile)
-            serialized_object = ResponderSerializer(object)    
-
-        print("3333", serialized_object.data)
-        return Response({'user':serialized_object.data})
 
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
