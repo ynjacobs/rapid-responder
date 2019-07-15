@@ -28,10 +28,26 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    # permission_classes=[AllowAny]
 
-    @action(methods=['POST'], detail=False, url_path='get_by', url_name='get_by', permission_classes=[AllowAny])
+    @action(methods=['PUT'], detail=False, url_path='get_user/', url_name='get_user/'""", permission_classes=[AllowAny]""")
+    def get_user(self, request):
+        print('--------------------')
+        # user = "I am a user"
+        user = request.user
+        serialized_user = UserSerializer(user)
+        if user is not None:
+            if user.is_active:
+                return Response({user: "I am a user"})
+                # return Response({user: serialized_user})
+            else:
+                return Response({user: "I am a user"})
+        else:
+                return Response({user: "I am a user"})
+
+    @action(methods=['POST'], detail=False, url_path='get_by', url_name='get_by' """, permission_classes=[AllowAny]""")
     def getUserByUsername(self, request):
-        print("OOOOOOOO")
+        print("OOOOOOOO", request.user)
         user = get_object_or_404(User, username=request.data['username'])
         print("11111111111", user)
         
@@ -48,36 +64,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
         print("3333", serialized_object.data)
         return Response({'user':serialized_object.data})
-
-class LoginViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    # @classmethod
-    # def get_extra_actions(cls):
-    #     return []
-    def post(self, request, format=None):
-        print("postttttttttttttttttttttttttttttttttt")
-        return Response(status=status.HTTP_200_OK)
-
-    @action(methods=['POST'], detail=False, url_path='auth/', url_name='auth/')
-    def auth(self, request):
-        print('-------------------------')
-        data = request.data
-
-        username = data.get('username', None)
-        password = data.get('password', None)
-
-        user = authenticate(username=username, password=password)
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-
-                return Response(status=status.HTTP_200_OK)
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
 
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()

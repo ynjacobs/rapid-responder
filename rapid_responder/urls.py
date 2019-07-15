@@ -28,12 +28,6 @@ from rest_framework_simplejwt.views import (
 )
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'is_staff')
-
-
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
@@ -46,7 +40,7 @@ urlpatterns = [
     url(r'^api/token/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     url(r'^api/token/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
-    path('auth/', auto_login,name= 'auth'),
+    # path('auth/', auto_login,name= 'auth'),
     path('qual/', get_qual,name= 'qual'),
     path('cond/', get_cond,name= 'cond'),
     path('saveres/', save_res, name='saveres'),
