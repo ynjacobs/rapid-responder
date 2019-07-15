@@ -9,6 +9,7 @@ __pycache__/init
 local_settings.py
 media
 .vscode/settings.json
+.vscode/settings.json
 settings.json
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
