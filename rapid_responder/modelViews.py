@@ -22,9 +22,6 @@ class ListUsers(APIView):
     serializer_class = UserSerializer
 
     def get(self, request, format=None):
-            """
-            Return a list of all users.
-            """
             auth_user = request.user.id
             profile = Profile.objects.get(user=auth_user)
             user = None
@@ -35,10 +32,8 @@ class ListUsers(APIView):
                 user = Responder.objects.get(profile=profile)
                 serialized_user = ResponderSerializer(user)
 
-
-            print("user:",user)
-            print("serialized_user:",serialized_user)
-            return Response({"user":serialized_user})
+            print("serialized_user:",serialized_user.data)
+            return Response({"user": serialized_user.data})
 
 # @api_view(['POST'])
 # @action(methods=['POST'], detail=False, url_path='login', url_name='login')
@@ -55,51 +50,10 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated,]
     # permission_classes=[AllowAny]
 
-    @action(methods=['GET'], detail=False, url_path='get_user/', url_name='get_user/', permission_classes=[AllowAny,])
-    def get_user(self, request):
-        print('--------------------')
-        # user = "I am a user"
-        user = request.user
-        serialized_user = UserSerializer(user)
-        if user is not None:
-            if user.is_active:
-                return Response({user: "I am a user"})
-                # return Response({user: serialized_user})
-            else:
-                return Response({user: "I am a user"})
-        else:
-                return Response({user: "I am a user"})
-
-
-
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
     permission_classes = [IsAuthenticated]
-
-    @action(methods=['POST'], detail=False, url_path='get_p', url_name='get_p')
-    def get_patient_byname(self, request):
-        print("get_patient_byname")
-        print("dddd", request.user.id)
-        """
-        user = get_object_or_404(User, username=request.data['username'])
-        print("11111111111", user)
-        
-        profile = get_object_or_404(Profile, user=user)
-        print("22222222", profile)
-
-        serialized_object = None
-        if(profile.flag == 'P'):
-            object = get_object_or_404(Patient, profile=profile)
-            serialized_object = PatientSerializer(object)    
-        else:
-            object = get_object_or_404(Responder, profile=profile)
-            serialized_object = ResponderSerializer(object)    
-
-        print("3333", serialized_object.data)
-        """
-        return Response({'welcome':'just welcome'})
-
 
     def create(self, request):
         body = request.data
@@ -143,6 +97,30 @@ class PatientViewSet(viewsets.ModelViewSet):
         login(request, user)
 
         return Response({'Hello':'World'})
+
+"""
+    @action(methods=['POST'], detail=False, url_path='get_p', url_name='get_p')
+    def get_patient_byname(self, request):
+        print("get_patient_byname")
+        print("dddd", request.user.id)
+        user = get_object_or_404(User, username=request.data['username'])
+        print("11111111111", user)
+        
+        profile = get_object_or_404(Profile, user=user)
+        print("22222222", profile)
+
+        serialized_object = None
+        if(profile.flag == 'P'):
+            object = get_object_or_404(Patient, profile=profile)
+            serialized_object = PatientSerializer(object)    
+        else:
+            object = get_object_or_404(Responder, profile=profile)
+            serialized_object = ResponderSerializer(object)    
+
+        print("3333", serialized_object.data)
+ 
+        return Response({'welcome':'just welcome'})
+"""
 
 
 class ResponderViewSet(viewsets.ModelViewSet):
