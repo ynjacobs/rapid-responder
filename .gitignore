@@ -5,9 +5,12 @@
 *.log
 *.pot
 *.pyc
-__pycache__/
+__pycache__/init
 local_settings.py
 media
+.vscode/settings.json
+.vscode/settings.json
+settings.json
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.

@@ -53,6 +53,9 @@ class Patient(models.Model):
     conditions = models.ManyToManyField(Condition,related_name='patients')
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, related_name='patient')
 
+    def __str__(self):
+        return self.name
+
 
 class Schedule(models.Model):
     date = models.DateField(default=date.today)

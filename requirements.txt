@@ -1,0 +1,13 @@
+Django                        
+django-filter                
+djangorestframework           
+djangorestframework-simplejwt
+Markdown                      
+pip                          
+psycopg2                     
+psycopg2-binary               
+PyJWT                       
+pytz                         
+setuptools                    
+sqlparse                     
+wheel                        
