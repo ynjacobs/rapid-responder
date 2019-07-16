@@ -53,7 +53,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def create(self, request):
         body = request.data
@@ -67,10 +67,11 @@ class PatientViewSet(viewsets.ModelViewSet):
         weight = body['weight']
         medications = body['medications']
         emer_contact_name = body['emer_contact_name']
-
         emer_contact_number = body['emer_contact_number']
         pwd = body['password']
+
         conds = body['conds']
+        print('conds:::::', conds)
 
         user = User.objects.create_user(uname, email, pwd,first_name=fname, last_name=lname)
         profile = Profile()
@@ -164,30 +165,52 @@ class CaseViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         body = request.data
-        uname = body['uname']
-        fname = body['fname']
-        lname = body['lname']
-        email = body['email']
-        phone = body['phone']
-        pwd = body['password']
-        quals = body['quals']
+        patient = body['patient']
+        condition = body['condition']
+        description = body['description']
 
-        user = User.objects.create_user(uname, email, pwd,first_name=fname, last_name=lname)
-        profile = Profile()
-        profile.user = user
-        profile.flag = 'R'
-        profile.save()
+        print("patient:", patient["id"])
+        print("condition:", condition)
+        print("description:", description)
 
-        responder = Responder()
-        responder.profile = profile
-        responder.phone_number = phone
-        responder.name = f'{fname} {lname}'
-        responder.save()
-        for id in quals:
-            qual = Qualification.objects.get(pk=id)
-            responder.qualifications.add(qual)
-        responder.save()
-        login(request, user)
-    
-        return Response({'Hello':'Success'})
+        case = Case()
+        case.patient = Patient.objects.get(pk=patient["id"])
+
+        case.condition = Condition.objects.get(pk=condition["id"])
+        case.description = description
+        case.save()
+
+        return Response({'Hello':'Success', "case_id": case.pk})
+
+    @action(methods=['get'], detail=True, url_path='get_unassign_cases', url_name='get_unassign_cases')
+    def get_unassign_cases_by_resname(self, request, pk=None):
+        print("in get_unassign_cases_by_resname")
+        print("::: ", request, pk)
+        responder = Responder.objects.get(id=pk)
+        cases = Case.objects.all().filter(status=CASE_STATUS.UNASSIGNED).filter(responder=responder)
+        print("cases , length", cases, len(cases))
+        # serialized_cases = self.serializer_class(cases)
+        
+        return Response({'welcome':'just welcome', 'cases': None })
+
+    @action(methods=['get'], detail=True, url_path='get_unassign_cases_pat', url_name='get_unassign_cases_pat')
+    def get_unassign_cases_by_patname(self, request, pk=None):
+        print("in get_unassign_cases_by_patname")
+        print("::: ", request, pk)
+        patient = Patient.objects.get(id=pk)
+        cases = Case.objects.all().filter(status=CASE_STATUS.UNASSIGNED).filter(patient=patient)
+        print("cases , length", cases, len(cases))
+        # serialized_cases = [self.serializer_class(case) for case in cases]
+
+        return Response({'welcome':'just welcome', 'cases': None })
+
+class QualViewSet(viewsets.ModelViewSet):
+    queryset = Qualification.objects.all()
+    serializer_class = QualSerializer
+    permission_classes = [AllowAny,]
+
+class CondViewSet(viewsets.ModelViewSet):
+    queryset = Condition.objects.all()
+    serializer_class = CondSerializer
+    permission_classes = [AllowAny,]
 

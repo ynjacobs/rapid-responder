@@ -1,5 +1,5 @@
 from rest_framework import routers, serializers, viewsets, views
-from rapid_responder.models import Patient, Responder, Profile, Schedule, Case
+from rapid_responder.models import Patient, Responder, Profile, Schedule, Case, Qualification, Condition
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,6 +28,16 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
+        fields = '__all__'
+
+class QualSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Qualification
+        fields = '__all__'
+
+class CondSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Condition
         fields = '__all__'
 
 class CaseSerializer(serializers.ModelSerializer):

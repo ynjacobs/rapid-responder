@@ -70,7 +70,7 @@ class Responder(models.Model):
 
 class Case(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
-    close_date = models.DateTimeField()
+    close_date = models.DateTimeField(null=True)
     status = models.CharField(max_length=20, default=CASE_STATUS.UNASSIGNED, choices=[(tag.value, tag.name) for tag in CASE_STATUS])
     description = models.TextField(max_length=1000)
     condition = models.ForeignKey(Condition, on_delete=models.SET_NULL, null=True, related_name='cases')

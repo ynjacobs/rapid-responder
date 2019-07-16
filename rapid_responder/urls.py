@@ -33,6 +33,8 @@ router.register(r'users', UserViewSet)
 router.register(r'patients', PatientViewSet)
 router.register(r'responders', ResponderViewSet)
 router.register(r'cases', CaseViewSet)
+router.register(r'qual', QualViewSet)
+router.register(r'cond', CondViewSet)
 # router.register(r'login', LoginViewSet, basename='login/auth/')
 
 urlpatterns = [
