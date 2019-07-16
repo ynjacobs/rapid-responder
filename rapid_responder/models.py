@@ -9,9 +9,6 @@ from django.forms import CharField, PasswordInput, Form
 from django.contrib.auth.models import User
 from enum import Enum
 
-
-
-
 class CASE_STATUS(Enum):
     UNASSIGNED = 'unassigned'
     ONGOING = 'ongoing'

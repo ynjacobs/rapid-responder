@@ -162,8 +162,6 @@ class CaseViewSet(viewsets.ModelViewSet):
     serializer_class = CaseSerializer
     permission_classes = [AllowAny,]
 
-
-"""
     def create(self, request):
         body = request.data
         uname = body['uname']
@@ -191,6 +189,5 @@ class CaseViewSet(viewsets.ModelViewSet):
         responder.save()
         login(request, user)
     
-
         return Response({'Hello':'Success'})
-"""
+
