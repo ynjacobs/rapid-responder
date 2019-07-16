@@ -27,13 +27,12 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-
-
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'patients', PatientViewSet)
 router.register(r'responders', ResponderViewSet)
+router.register(r'cases', CaseViewSet)
 # router.register(r'login', LoginViewSet, basename='login/auth/')
 
 urlpatterns = [

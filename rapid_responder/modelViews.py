@@ -157,3 +157,40 @@ class ResponderViewSet(viewsets.ModelViewSet):
 
         return Response({'Hello':'Success'})
 
+class CaseViewSet(viewsets.ModelViewSet):
+    queryset = Case.objects.all()
+    serializer_class = CaseSerializer
+    permission_classes = [AllowAny,]
+
+
+"""
+    def create(self, request):
+        body = request.data
+        uname = body['uname']
+        fname = body['fname']
+        lname = body['lname']
+        email = body['email']
+        phone = body['phone']
+        pwd = body['password']
+        quals = body['quals']
+
+        user = User.objects.create_user(uname, email, pwd,first_name=fname, last_name=lname)
+        profile = Profile()
+        profile.user = user
+        profile.flag = 'R'
+        profile.save()
+
+        responder = Responder()
+        responder.profile = profile
+        responder.phone_number = phone
+        responder.name = f'{fname} {lname}'
+        responder.save()
+        for id in quals:
+            qual = Qualification.objects.get(pk=id)
+            responder.qualifications.add(qual)
+        responder.save()
+        login(request, user)
+    
+
+        return Response({'Hello':'Success'})
+"""
