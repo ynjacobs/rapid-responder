@@ -130,11 +130,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 CORS_ORIGIN_WHITELIST = (
     'http://0.0.0.0:3000',
     'http://localhost:3000',
+    'http://www.rapid-responder.com:3000',
+
 )
 
 REST_FRAMEWORK = {
@@ -158,6 +160,20 @@ SIMPLE_JWT = {
     'VERIFYING_KEY': None,
 }
 
+# PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+# STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+# STATIC_URL =  path.join(PROJECT_DIR,'static')
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rapid_responder.settings')
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'    
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 
 
