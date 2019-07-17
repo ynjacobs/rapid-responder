@@ -44,5 +44,6 @@ class CaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Case
         fields = '__all__'
-        depth = 1
+        depth = 3
+
 

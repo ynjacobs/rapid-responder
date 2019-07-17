@@ -31,8 +31,7 @@ class ListUsers(APIView):
             else:
                 user = Responder.objects.get(profile=profile)
                 serialized_user = ResponderSerializer(user)
-
-            print("serialized_user:",serialized_user.data)
+            # print("serialized_user:",serialized_user.data)
             return Response({"user": serialized_user.data})
 
 # @api_view(['POST'])
@@ -163,6 +162,18 @@ class CaseViewSet(viewsets.ModelViewSet):
     serializer_class = CaseSerializer
     permission_classes = [AllowAny,]
 
+    def update(self, request, pk=None):
+        print("in update with pk:", pk)
+        body = request.data
+        res_id = body['res_id']
+        print("in update with request params:", res_id)
+        responder = Responder.objects.get(id=res_id)
+
+        case = Case.objects.get(pk=pk)
+        case.responder = responder
+        case.save()
+        return Response({'Hello':'Success'})
+
     def create(self, request):
         body = request.data
         patient = body['patient']
@@ -188,10 +199,14 @@ class CaseViewSet(viewsets.ModelViewSet):
         print("::: ", request, pk)
         responder = Responder.objects.get(id=pk)
         cases = Case.objects.all().filter(status=CASE_STATUS.UNASSIGNED).filter(responder=responder)
-        print("cases , length", cases, len(cases))
-        # serialized_cases = self.serializer_class(cases)
-        
-        return Response({'welcome':'just welcome', 'cases': None })
+        data = None
+        if cases and len(cases) > 0:
+            case = cases[0]
+            serialized_case = self.serializer_class(case)
+            data = serialized_case.data
+
+        print("serialized_cases", data)
+        return Response({'welcome':'just welcome', 'case': data })
 
     @action(methods=['get'], detail=True, url_path='get_unassign_cases_pat', url_name='get_unassign_cases_pat')
     def get_unassign_cases_by_patname(self, request, pk=None):
@@ -199,10 +214,14 @@ class CaseViewSet(viewsets.ModelViewSet):
         print("::: ", request, pk)
         patient = Patient.objects.get(id=pk)
         cases = Case.objects.all().filter(status=CASE_STATUS.UNASSIGNED).filter(patient=patient)
-        print("cases , length", cases, len(cases))
-        # serialized_cases = [self.serializer_class(case) for case in cases]
+        data = None
+        if cases and len(cases) > 0:
+            case = cases[0]
+            serialized_case = self.serializer_class(case)
+            data = serialized_case.data
 
-        return Response({'welcome':'just welcome', 'cases': None })
+        print("serialized_case", data)
+        return Response({'welcome':'just welcome', 'case': data })
 
 class QualViewSet(viewsets.ModelViewSet):
     queryset = Qualification.objects.all()
