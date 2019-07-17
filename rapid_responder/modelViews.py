@@ -64,6 +64,7 @@ class PatientViewSet(viewsets.ModelViewSet):
         phone = body['phone_number']
         height = body['height']
         weight = body['weight']
+        address = body['address']
         medications = body['medications']
         emer_contact_name = body['emer_contact_name']
         emer_contact_number = body['emer_contact_number']
@@ -85,6 +86,7 @@ class PatientViewSet(viewsets.ModelViewSet):
         patient.height = height
         patient.weight = weight
         patient.age = age
+        patient.address = address
         patient.emer_contact_name = emer_contact_name
         patient.emer_contact_number = emer_contact_number
         patient.name = f'{fname} {lname}'
@@ -97,31 +99,6 @@ class PatientViewSet(viewsets.ModelViewSet):
         login(request, user)
 
         return Response({'Hello':'World'})
-
-"""
-    @action(methods=['POST'], detail=False, url_path='get_p', url_name='get_p')
-    def get_patient_byname(self, request):
-        print("get_patient_byname")
-        print("dddd", request.user.id)
-        user = get_object_or_404(User, username=request.data['username'])
-        print("11111111111", user)
-        
-        profile = get_object_or_404(Profile, user=user)
-        print("22222222", profile)
-
-        serialized_object = None
-        if(profile.flag == 'P'):
-            object = get_object_or_404(Patient, profile=profile)
-            serialized_object = PatientSerializer(object)    
-        else:
-            object = get_object_or_404(Responder, profile=profile)
-            serialized_object = ResponderSerializer(object)    
-
-        print("3333", serialized_object.data)
- 
-        return Response({'welcome':'just welcome'})
-"""
-
 
 class ResponderViewSet(viewsets.ModelViewSet):
     queryset = Responder.objects.all()
@@ -155,7 +132,7 @@ class ResponderViewSet(viewsets.ModelViewSet):
         login(request, user)
     
 
-        return Response({'Hello':'Success'})
+        return Response({'message':'Success'})
 
 class CaseViewSet(viewsets.ModelViewSet):
     queryset = Case.objects.all()
@@ -167,12 +144,17 @@ class CaseViewSet(viewsets.ModelViewSet):
         body = request.data
         res_id = body['res_id']
         print("in update with request params:", res_id)
-        responder = Responder.objects.get(id=res_id)
 
+        responder = Responder.objects.get(id=res_id)
         case = Case.objects.get(pk=pk)
+        print("responder:", responder)        
         case.responder = responder
+        case.status = Case.ONGOING
         case.save()
-        return Response({'Hello':'Success'})
+
+        data = self.serializer_class(case).data if case else None
+        print("serialized_cases", data)
+        return Response({'message':'Success, almost!', "case": data})
 
     def create(self, request):
         body = request.data
@@ -190,30 +172,18 @@ class CaseViewSet(viewsets.ModelViewSet):
         case.condition = Condition.objects.get(pk=condition["id"])
         case.description = description
         case.save()
+        
+        serialized_case = self.serializer_class(case)
+        data = serialized_case.data
 
-        return Response({'Hello':'Success', "case_id": case.pk})
+        return Response({'message':'Success', "case": data})
 
-    @action(methods=['get'], detail=True, url_path='get_unassign_cases', url_name='get_unassign_cases')
-    def get_unassign_cases_by_resname(self, request, pk=None):
-        print("in get_unassign_cases_by_resname")
+    @action(methods=['get'], detail=True, url_path='ongoing', url_name='ongoing')
+    def get_ongoing_case_by_resname(self, request, pk=None):
+        print("in get_ongoing_case_by_resname")
         print("::: ", request, pk)
         responder = Responder.objects.get(id=pk)
-        cases = Case.objects.all().filter(status=CASE_STATUS.UNASSIGNED).filter(responder=responder)
-        data = None
-        if cases and len(cases) > 0:
-            case = cases[0]
-            serialized_case = self.serializer_class(case)
-            data = serialized_case.data
-
-        print("serialized_cases", data)
-        return Response({'welcome':'just welcome', 'case': data })
-
-    @action(methods=['get'], detail=True, url_path='get_unassign_cases_pat', url_name='get_unassign_cases_pat')
-    def get_unassign_cases_by_patname(self, request, pk=None):
-        print("in get_unassign_cases_by_patname")
-        print("::: ", request, pk)
-        patient = Patient.objects.get(id=pk)
-        cases = Case.objects.all().filter(status=CASE_STATUS.UNASSIGNED).filter(patient=patient)
+        cases = Case.objects.all().filter(status=Case.ONGOING).filter(responder=responder)
         data = None
         if cases and len(cases) > 0:
             case = cases[0]
@@ -221,7 +191,34 @@ class CaseViewSet(viewsets.ModelViewSet):
             data = serialized_case.data
 
         print("serialized_case", data)
-        return Response({'welcome':'just welcome', 'case': data })
+        return Response({'message':'just welcome', 'case': data })
+
+    @action(methods=['get'], detail=False, url_path='unassigned', url_name='unassigned')
+    def get_unassigned_cases(self, request):
+        print("in get_unassigned_cases")
+        cases = Case.objects.filter(status=Case.UNASSIGNED)
+        data = None
+        if cases and len(cases) > 0:
+            serialized_cases = self.serializer_class(cases, many=True)
+            data = serialized_cases.data
+
+        print("serialized_cases", data)
+        return Response({'cases': data })
+
+    @action(methods=['get'], detail=True, url_path='get_unassign_cases_pat', url_name='get_unassign_cases_pat')
+    def get_unassign_cases_by_patname(self, request, pk=None):
+        print("in get_unassign_cases_by_patname")
+        print("::PK::", pk)
+        patient = Patient.objects.get(id=pk)
+        cases = Case.objects.all().filter(status__in=[Case.UNASSIGNED, Case.ONGOING]).filter(patient=patient)
+        data = None
+        if cases and len(cases) > 0:
+            case = cases[0]
+            serialized_case = self.serializer_class(case)
+            data = serialized_case.data
+
+        print("serialized_case", data)
+        return Response({'message':'just welcome', 'case': data })
 
 class QualViewSet(viewsets.ModelViewSet):
     queryset = Qualification.objects.all()

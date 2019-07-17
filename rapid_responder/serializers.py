@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        exclude = ('name',)
+        fields = '__all__'
         depth = 2
 
 class ResponderSerializer(serializers.ModelSerializer):
@@ -45,5 +45,4 @@ class CaseSerializer(serializers.ModelSerializer):
         model = Case
         fields = '__all__'
         depth = 3
-
 
