@@ -136,6 +136,9 @@ CORS_ORIGIN_WHITELIST = (
     'http://0.0.0.0:3000',
     'http://localhost:3000',
     'http://www.rapid-responder.com:3000',
+    'https://rapid-responder-api.herokuapp.com/',
+    'https://rapid-responder.netlify.com/',
+
 
 )
 
